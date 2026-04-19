@@ -18,20 +18,20 @@ Analyze credit card portfolio performance using customer and transaction data to
 ### 2. Create Tables in SQL
 
 ```sql
-CREATE TABLE cust_detail (
+CREATE TABLE customer_master (
  customer_id SERIAL PRIMARY KEY,
  customer_age INT,
  income FLOAT
 );
 
-CREATE TABLE cc_detail (
+CREATE TABLE card_transactions (
  transaction_id SERIAL PRIMARY KEY,
  customer_id INT,
  annual_fees FLOAT,
  total_trans_amt FLOAT,
  interest_earned FLOAT,
  week_start_date DATE,
- FOREIGN KEY (customer_id) REFERENCES cust_detail(customer_id)
+ FOREIGN KEY (customer_id) REFERENCES customer_master(customer_id)
 );
 ```
 
@@ -40,11 +40,11 @@ CREATE TABLE cc_detail (
 ### 3. Import CSV Files into SQL
 
 ```sql
-COPY cust_detail 
+COPY customer_master
 FROM 'customer_master.csv'
 DELIMITER ',' CSV HEADER;
 
-COPY cc_detail
+COPY card_transactions
 FROM 'card_transactions.csv'
 DELIMITER ',' CSV HEADER;
 ```
@@ -56,15 +56,17 @@ DELIMITER ',' CSV HEADER;
 ```sql
 SELECT card_category,
 SUM(total_trans_amt) AS revenue
-FROM cc_detail
+FROM card_transactions
 GROUP BY card_category;
 ```
 
 ```sql
-SELECT customer_job,
-AVG(interest_earned) AS avg_interest
-FROM cc_detail
-GROUP BY customer_job;
+SELECT c.customer_job,
+AVG(t.interest_earned) AS avg_interest
+FROM customer_master c
+JOIN card_transactions t
+ON c.customer_id = t.customer_id
+GROUP BY c.customer_job;
 ```
 
 ---
