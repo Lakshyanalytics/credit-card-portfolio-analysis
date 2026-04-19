@@ -72,25 +72,41 @@ GROUP BY customer_job;
 ## 5. DAX Queries
 
 ```DAX
-AgeGroup =
-SWITCH(
+AgeGroup = SWITCH(
 TRUE(),
-customer_master[Customer_Age] <30,"20-30",
-customer_master[Customer_Age] <40,"30-40",
-customer_master[Customer_Age] <50,"40-50",
-"50+"
+customer_master[customer_age] < 30,"20-30",
+customer_master[customer_age] >=30 && customer_master[customer_age] <40,"30-40",
+customer_master[customer_age] >=40 && customer_master[customer_age] <50,"40-50",
+customer_master[customer_age] >=50 && customer_master[customer_age] <60,"50-60",
+customer_master[customer_age] >=60,"60+",
+"unknown"
+)
+```
+
+```DAX
+IncomeGroup = SWITCH(
+TRUE(),
+customer_master[income] <35000,"Low",
+customer_master[income] >=35000 && customer_master[income] <70000,"Med",
+customer_master[income] >=70000,"High",
+"unknown"
 )
 ```
 
 ```DAX
 Revenue =
-card_transactions[Annual_Fees]
-+ card_transactions[Total_Trans_Amt]
-+ card_transactions[Interest_Earned]
+card_transactions[annual_fees]
++ card_transactions[total_trans_amt]
++ card_transactions[interest_earned]
 ```
 
 ```DAX
-Current_Week_Revenue =
+week_num2 =
+WEEKNUM(card_transactions[week_start_date])
+```
+
+```DAX
+Current_week_Revenue =
 CALCULATE(
 SUM(card_transactions[Revenue]),
 FILTER(
@@ -99,10 +115,12 @@ card_transactions[week_num2]=MAX(card_transactions[week_num2])
 ))
 ```
 
----
-
-## Project Insights
-- Identified high-revenue card segments  
-- Evaluated week-over-week revenue movement  
-- Analyzed profitability and utilization patterns  
-- Monitored delinquency-related risk indicators
+```DAX
+Previous_week_Revenue =
+CALCULATE(
+SUM(card_transactions[Revenue]),
+FILTER(
+ALL(card_transactions),
+card_transactions[week_num2]=MAX(card_transactions[week_num2])-1
+))
+```
