@@ -5,7 +5,17 @@ Analyze credit card portfolio performance using customer and transaction data to
 
 ## Import Data to SQL Database
 
-### SQL Queries
+### Steps
+
+### 1. Prepare CSV Files
+- customer_master.csv
+- customer_supplement.csv
+- card_transactions.csv
+- card_transactions_supplement.csv
+
+---
+
+### 2. Create Tables in SQL
 
 ```sql
 CREATE TABLE cust_detail (
@@ -20,27 +30,54 @@ CREATE TABLE cc_detail (
  annual_fees FLOAT,
  total_trans_amt FLOAT,
  interest_earned FLOAT,
+ week_start_date DATE,
  FOREIGN KEY (customer_id) REFERENCES cust_detail(customer_id)
 );
 ```
 
-```sql
-COPY cust_detail FROM 'customer.csv' DELIMITER ',' CSV HEADER;
+---
 
-COPY cc_detail FROM 'credit_card.csv' DELIMITER ',' CSV HEADER;
+### 3. Import CSV Files into SQL
+
+```sql
+COPY cust_detail 
+FROM 'customer_master.csv'
+DELIMITER ',' CSV HEADER;
+
+COPY cc_detail
+FROM 'card_transactions.csv'
+DELIMITER ',' CSV HEADER;
 ```
 
 ---
 
-## DAX Queries
+## 4. Analytical SQL Queries
+
+```sql
+SELECT card_category,
+SUM(total_trans_amt) AS revenue
+FROM cc_detail
+GROUP BY card_category;
+```
+
+```sql
+SELECT customer_job,
+AVG(interest_earned) AS avg_interest
+FROM cc_detail
+GROUP BY customer_job;
+```
+
+---
+
+## 5. DAX Queries
 
 ```DAX
 AgeGroup =
 SWITCH(
 TRUE(),
-customer_master[Customer_Age] < 30,"20-30",
-customer_master[Customer_Age] < 40,"30-40",
-customer_master[Customer_Age] < 50,"40-50",
+customer_master[Customer_Age] <30,"20-30",
+customer_master[Customer_Age] <40,"30-40",
+customer_master[Customer_Age] <50,"40-50",
 "50+"
 )
 ```
@@ -65,12 +102,7 @@ card_transactions[week_num2]=MAX(card_transactions[week_num2])
 ---
 
 ## Project Insights
-- Identified high-revenue card segments
-- Evaluated week-over-week revenue movement
-- Analyzed profitability and utilization patterns
+- Identified high-revenue card segments  
+- Evaluated week-over-week revenue movement  
+- Analyzed profitability and utilization patterns  
 - Monitored delinquency-related risk indicators
-
-## Dashboard Images
-See dashboards/ folder for:
-- CC Transaction Analytics
-- CC Customer Insights
