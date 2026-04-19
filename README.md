@@ -124,3 +124,20 @@ ALL(card_transactions),
 card_transactions[week_num2]=MAX(card_transactions[week_num2])-1
 ))
 ```
+
+## Project Insights
+
+### Week-over-Week (WoW) Trends
+- Revenue showed positive week-over-week growth of 28.8%
+- Transaction volume and transaction amount increased over the prior period
+- Customer activity showed continued growth
+
+### Year-to-Date (YTD) Highlights
+- Portfolio revenue exceeded 55M
+- Interest earned reached 7.8M
+- Transaction amount crossed 45M
+- Male customers contributed slightly higher revenue than female customers
+- Blue and Silver cards contributed the majority of transaction activity
+- Texas, New York, and California were the leading revenue-contributing states
+- Activation rate remained above 57%
+- Delinquency indicators remained near 6%
