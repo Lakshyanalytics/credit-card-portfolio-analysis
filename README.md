@@ -1,7 +1,7 @@
 # Credit Card Portfolio Analysis
 
 ## Project Objective
-Analyze credit card portfolio performance using customer and transaction data to support profitability, portfolio monitoring, and business insights.
+Analyze credit card portfolio performance using customer and transaction data to support profitability, risk monitoring, and business insights.
 
 ## Import Data to SQL Database
 
